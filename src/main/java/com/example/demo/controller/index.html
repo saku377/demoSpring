@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1> Listado libros</h1>
+    <ul id="lista-libros"></ul>
+
+    <h1>Listado de Autores</h1>
+    <ul id="lista-autores"></ul>
+
+    <h1>Listado de Categorías</h1>
+    <ul id="lista-categorias"></ul>
+    
+    <script>
+        const contenedor = document.getElementById("lista-libros");
+        const contenedorAutores = document.getElementById("lista-autores");
+        const contenedorCategorias = document.getElementById("lista-categorias");
+
+        // 1. Obtener libros
+        fetch("http://localhost:8080/api/books")
+        .then(respuesta => respuesta.json())
+        .then(data => {
+            console.log(data);
+            for(let libro of data) {
+                const li = document.createElement("li");
+                li.textContent = `${libro.title} - Escrito por: ${libro.author}`;
+                contenedor.appendChild(li);
+            }
+        }) 
+        .catch(error => console.log("error:", error));
+
+        // 2. Obtener autores
+        fetch("http://localhost:8080/api/authors")
+        .then(respuesta => respuesta.json())
+        .then(data => {
+            console.log(data);
+            contenedorAutores.innerHTML = "";
+            for(let autor of data) {
+                const li = document.createElement("li");
+                li.textContent = `${autor.name} - Nacionalidad: ${autor.nationality}`;
+                contenedorAutores.appendChild(li);
+            }
+        })
+        .catch(error => console.log("Error autores:", error));
+
+        // 3. Obtener categorías (Fíjate bien en usar 'categoria' en el bucle para evitar errores)
+        fetch("http://localhost:8080/api/categories")
+        .then(respuesta => respuesta.json())
+        .then(data => {
+            console.log(data);
+            contenedorCategorias.innerHTML = "";
+            for(let categoria of data) {
+                const li = document.createElement("li");
+                li.textContent = `Categoría: ${categoria.name}`;
+                contenedorCategorias.appendChild(li);
+            }
+        })
+        .catch(error => console.log("Error categorías:", error));
+
+    </script>
+</body>
+</html>
